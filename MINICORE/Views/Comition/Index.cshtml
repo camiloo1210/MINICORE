@@ -1,41 +1,87 @@
-﻿@model IEnumerable<MINICORE.Models.ComitionRule>
-
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+    ViewData["Title"] = "Calcular Comisiones";
 }
 
-<h1>Index</h1>
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Encabezado -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary">
+                    <i class="bi bi-calculator"></i> Sistema de Cálculo de Comisiones
+                </h1>
+                <p class="lead text-muted">Seleccione el rango de fechas para calcular las comisiones de ventas</p>
+            </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MinimumAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CommissionPercentage)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MinimumAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CommissionPercentage)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+            <!-- Formulario de búsqueda -->
+            <div class="card shadow-lg border-0 mb-5">
+                <div class="card-header bg-gradient text-white py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="mb-0"><i class="bi bi-calendar-range"></i> Rango de Fechas</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Calcular" method="post">
+                        <div class="row g-4 align-items-end">
+                            <div class="col-md-5">
+                                <label for="desde" class="form-label fw-bold">
+                                    <i class="bi bi-calendar-event text-primary"></i> Fecha Desde
+                                </label>
+                                <input type="date"
+                                       class="form-control form-control-lg"
+                                       id="desde"
+                                       name="desde"
+                                       required />
+                            </div>
+
+                            <div class="col-md-5">
+                                <label for="hasta" class="form-label fw-bold">
+                                    <i class="bi bi-calendar-check text-primary"></i> Fecha Hasta
+                                </label>
+                                <input type="date"
+                                       class="form-control form-control-lg"
+                                       id="hasta"
+                                       name="hasta"
+                                       required />
+                            </div>
+
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="bi bi-search"></i> Calcular
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Instrucciones -->
+            <div class="alert alert-info border-0 shadow-sm" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+                    <div>
+                        <strong>Instrucciones:</strong> Seleccione el período de fechas para generar el reporte de comisiones por vendedor.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('desde').setAttribute('max', hoy);
+            document.getElementById('hasta').setAttribute('max', hoy);
+
+            document.getElementById('hasta').addEventListener('change', function() {
+                const desde = document.getElementById('desde').value;
+                const hasta = this.value;
+
+                if (desde && hasta && hasta < desde) {
+                    alert('La fecha hasta debe ser mayor o igual a la fecha desde');
+                    this.value = '';
+                }
+            });
+        });
+    </script>
 }
-    </tbody>
-</table>

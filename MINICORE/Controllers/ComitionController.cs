@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace MINICORE.Controllers
 {
-    public class ComisionesController : Controller
+    public class ComitionController : Controller
     {
         private readonly minicore _context;
 
-        public ComisionesController(minicore context)
+        public ComitionController(minicore context)
         {
             _context = context;
         }

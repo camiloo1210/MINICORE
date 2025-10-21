@@ -1,0 +1,127 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Resultados de Comisiones";
+    decimal totalVentas = 0;
+    decimal totalComisiones = 0;
+    
+    if (Model != null && Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            totalVentas += (decimal)item.TotalVentas;
+            totalComisiones += (decimal)item.Comision;
+        }
+    }
+}
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="display-6 fw-bold text-primary">
+                        <i class="bi bi-graph-up-arrow"></i> Resultados de Comisiones
+                    </h2>
+                    <p class="text-muted">Detalle de comisiones calculadas por vendedor</p>
+                </div>
+                <a asp-action="Index" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Nueva Consulta
+                </a>
+            </div>
+
+            @if (Model != null && Model.Any())
+            {
+                <div class="row g-4">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card shadow-sm border-0 h-100">
+                                <div class="card-header text-white py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                    <h5 class="mb-0">
+                                        <i class="bi bi-person-circle"></i> @item.Nombre
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Total en Ventas</small>
+                                        <h3 class="text-success mb-0">@string.Format("{0:C}", (decimal)item.TotalVentas)</h3>
+                                    </div>
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Porcentaje de Comisión</small>
+                                        <h4 class="text-info mb-0">@string.Format("{0:N2}", (decimal)item.Porcentaje)%</h4>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <small class="text-muted d-block">Comisión Total</small>
+                                        <h3 class="text-primary mb-0 fw-bold">@string.Format("{0:C}", (decimal)item.Comision)</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="card shadow-sm border-0 mt-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="bi bi-table"></i> Resumen Detallado</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Vendedor</th>
+                                        <th class="text-end">Total Ventas</th>
+                                        <th class="text-center">% Comisión</th>
+                                        <th class="text-end">Comisión</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="fw-bold">@item.Nombre</td>
+                                            <td class="text-end">@string.Format("{0:C}", (decimal)item.TotalVentas)</td>
+                                            <td class="text-center">
+                                                <span class="badge bg-info">@string.Format("{0:N2}", (decimal)item.Porcentaje)%</span>
+                                            </td>
+                                            <td class="text-end fw-bold text-primary">@string.Format("{0:C}", (decimal)item.Comision)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <td class="fw-bold">TOTAL GENERAL</td>
+                                        <td class="text-end fw-bold">@string.Format("{0:C}", totalVentas)</td>
+                                        <td class="text-center">-</td>
+                                        <td class="text-end fw-bold text-success">@string.Format("{0:C}", totalComisiones)</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning shadow-sm" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-exclamation-triangle-fill fs-2 me-3"></i>
+                        <div>
+                            <h5 class="alert-heading mb-1">No se encontraron ventas</h5>
+                            <p class="mb-0">No hay ventas registradas en el rango de fechas seleccionado.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a asp-action="Index" class="btn btn-primary btn-lg">
+                        <i class="bi bi-arrow-left"></i> Volver a la Búsqueda
+                    </a>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
